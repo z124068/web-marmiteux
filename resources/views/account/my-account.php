@@ -22,7 +22,7 @@
 
         .header-title {
             font-size: 2.5rem;
-            color: #f8aeb0 ;
+            color: #e63946;
             text-align: center;
             margin-top: 100px;
         }
@@ -74,10 +74,10 @@
                     <a class="nav-link" href="#">Favorite</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Sign in</a>
+                    <a class="nav-link" href="/marmiteux">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn btn-danger text-white" href="#">Register</a>
+                    <a class="nav-link" href="/marmiteux">Disconnect</a>
                 </li>
             </ul>
         </div>
@@ -85,27 +85,18 @@
 
     <div class="header-section">
         <div class="container">
-            <h1 class="header-title">Marmiteux</h1>
-            <p class="header-subtitle">Where Every Recipe Tells a Story.</p>
-            <img src="/mnt/data/image.png" alt="Cake Image">
+            <h1 class="header-title">Glad to see you back <?php echo $user['username']; ?> !</h1>
         </div>
     </div>
 
     <div class="container article-section">
-        <div class="row">
-            <div class="col-md-6 article">
-                <img src="https://via.placeholder.com/500" alt="Article Image 1">
-            </div>
-            <div class="col-md-6 article">
-                <img src="https://via.placeholder.com/500" alt="Article Image 2">
-            </div>
-            <div class="col-md-6 article">
-                <img src="https://via.placeholder.com/500" alt="Article Image 3">
-            </div>
-            <div class="col-md-6 article">
-                <img src="https://via.placeholder.com/500" alt="Article Image 4">
-            </div>
-        </div>
+        <h1 class="header-title">My Recipes :</h1>
+
+    </div>
+
+    <div class="container article-section">
+        <h1 class="header-title">My Favorite Recipes :</h1>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

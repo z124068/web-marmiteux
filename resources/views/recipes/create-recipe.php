@@ -36,7 +36,7 @@
                                             <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                                                 <div>
 
-                                                    <form action="/marmiteux/create-recipe/post" method="POST">
+                                                    <form action="/marmiteux/my-account/recipes/create-recipe/post" method="POST">
                                                         <div>
                                                             <h3 class="text-lg leading-6 font-medium text-gray-900">
                                                                 General Informations

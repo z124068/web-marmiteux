@@ -162,7 +162,7 @@ class PageController
             $user = $result->fetch_assoc();
 
             // Préparer la requête SQL pour récupérer les recettes de l'utilisateur
-            $stmt_recipes = $db->prepare("SELECT name, description , recipe FROM recipes WHERE user_id = ?");
+            $stmt_recipes = $db->prepare("SELECT id, name, description , recipe FROM recipes WHERE user_id = ?");
             $stmt_recipes->bind_param("i", $userId);
             $stmt_recipes->execute();
             $result_recipes = $stmt_recipes->get_result();

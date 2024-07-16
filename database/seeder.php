@@ -30,8 +30,9 @@ if ($conn->query($sql) === TRUE) {
 }
 
 // Exemple d'insertion pour la table users
-$sql = "INSERT INTO users (username, email_address, password, description, status)
-        VALUES ('mathis', 'mathis.bertrand@gmail.com', 'mathis06', 'an happy user who love to cook!', 'active')";
+$password = password_hash('mathis06', PASSWORD_DEFAULT);
+$sql = "INSERT INTO users (name, surname, username, email_address, password, description, status)
+        VALUES ('Mathis', 'Bertrand', 'mathis', 'mathis.bertrand@gmail.com', '$password', 'an happy user who love to cook!', 'active')";
 if ($conn->query($sql) === TRUE) {
     echo "Data successfully inserted into the users table.<br>";
 } else {

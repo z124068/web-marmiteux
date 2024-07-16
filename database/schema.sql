@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS recipe_types (
 -- Vérification et création de la table users
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    surname VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     email_address VARCHAR(255) NOT NULL,

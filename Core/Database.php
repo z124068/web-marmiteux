@@ -28,6 +28,11 @@ class Database
         return $this->conn->prepare($sql);
     }
 
+    public function query($sql)
+    {
+        return $this->conn->query($sql);
+    }
+
     public function close()
     {
         $this->conn->close();

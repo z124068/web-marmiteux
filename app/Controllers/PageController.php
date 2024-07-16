@@ -79,17 +79,19 @@ class PageController
         $db = new Database();
 
         // Récupération des données du formulaire
-        $email = $_POST['email_address'];
+        $name = $_POST['name'];
+        $surname = $_POST['surname'];
+        $email_address = $_POST['email_address'];
         $username = $_POST['username'];
         $password = $_POST['password'];
         $description = $_POST['description'];
 
         // Vérifier si l'utilisateur existe déjà
-        $checkQuery = "SELECT * FROM users WHERE username = '$username'";
-        $checkResult = $db->prepare($checkQuery);
+        $checkQuery = "SELECT * FROM users WHERE email_address = '$email_address' OR username = '$username'";
+        $checkResult = $db->query($checkQuery);
 
         if ($checkResult->num_rows > 0) {
-            echo "Username already exists!";
+            echo "User with that email or username already exists!";
             return;
         }
 
@@ -97,14 +99,15 @@ class PageController
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         // Préparer la requête SQL pour insérer l'utilisateur
-        $sql = "INSERT INTO users (email_address, username, password, description) 
-                VALUES ('$email', '$username', '$hashedPassword', '$description')";
+        $sql = "INSERT INTO users (name, surname, username, password, email_address,  description) 
+                VALUES ('$name', '$surname', '$username', '$hashedPassword', '$email_address', '$description')";
 
         // Exécuter la requête SQL
-        if ($db->prepare($sql)) {
-            echo "User registered successfully!";
+        if ($db->query($sql)) {
+            echo "You created your account successfully, you can now login.";
+            header("refresh:2;url=/marmiteux/login");
             // Rediriger l'utilisateur vers une page de confirmation ou vers le login
-            // header('Location: /login'); // Rediriger vers la page de login
+            // header('Location: /marmiteux/login'); // Rediriger vers la page de login
         } else {
             echo "Error creating user: ";
         }
@@ -115,10 +118,14 @@ class PageController
 
     public function logout()
     {
-        // Traite la déconnexion de l'utilisateur
-        // Placez votre logique de déconnexion ici
-        // Redirige ou affiche un message en fonction du résultat
-        echo 'Logging out...';
+        session_start();
+        // Supprimer toutes les variables de session
+        $_SESSION = [];
+        // Détruire la session
+        session_destroy();
+        // Rediriger l'utilisateur vers la page d'accueil ou la page de login
+        header('Location: /marmiteux');
+        exit;
     }
 
     public function favorite()
@@ -145,7 +152,7 @@ class PageController
         $db = new Database();
 
         // Préparer la requête SQL pour récupérer les informations de l'utilisateur
-        $stmt = $db->prepare("SELECT username, email_address, description FROM users WHERE id = ?");
+        $stmt = $db->prepare("SELECT name, surname, username, email_address, description FROM users WHERE id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -154,7 +161,19 @@ class PageController
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
 
-            // Inclure la vue en passant les informations de l'utilisateur
+            // Préparer la requête SQL pour récupérer les recettes de l'utilisateur
+            $stmt_recipes = $db->prepare("SELECT name, description , recipe FROM recipes WHERE user_id = ?");
+            $stmt_recipes->bind_param("i", $userId);
+            $stmt_recipes->execute();
+            $result_recipes = $stmt_recipes->get_result();
+
+            // Récupérer les recettes dans un tableau
+            $recipes = [];
+            while ($row = $result_recipes->fetch_assoc()) {
+                $recipes[] = $row;
+            }
+
+            // Inclure la vue en passant les informations de l'utilisateur et les recettes
             include_once __DIR__ . '/../../resources/views/account/my-account.php';
         } else {
             // Gérer le cas où l'utilisateur n'existe pas (normalement ne devrait pas arriver ici)
@@ -163,6 +182,7 @@ class PageController
 
         // Fermeture de la connexion à la base de données
         $stmt->close();
+        $stmt_recipes->close();
         $db->close();
     }
 }

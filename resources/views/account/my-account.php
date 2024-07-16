@@ -5,98 +5,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marmiteux</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+    <link href="<?php echo '/marmiteux/public/styles.css'; ?>" rel="stylesheet">
 
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .header-title {
-            font-size: 2.5rem;
-            color: #e63946;
-            text-align: center;
-            margin-top: 100px;
-        }
-
-        .header-subtitle {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #6c757d;
-        }
-
-        .header-section {
-            background-color: #f8f9fa;
-            padding: 50px 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .header-section img {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 10%;
-            width: 100px;
-        }
-
-        .article-section {
-            margin-top: 30px;
-        }
-
-        .article img {
-            width: 100%;
-            height: auto;
-        }
-
-        .article {
-            padding: 10px;
-        }
-    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">
-            <img src="/mnt/data/image.png" alt="logo" style="width: 40px;">
-        </a>
-        <div class="collapse navbar-collapse justify-content-end">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Favorite</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/marmiteux">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/marmiteux">Disconnect</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
 
-    <div class="header-section">
-        <div class="container">
-            <h1 class="header-title">Glad to see you back <?php echo $user['username']; ?> !</h1>
-        </div>
-    </div>
+    <div>
+        <?php include 'resources/views/components/sidebar.php'; ?>
 
-    <div class="container article-section">
-        <h1 class="header-title">My Recipes :</h1>
+        <main class="py-10 lg:pl-72">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <div class="px-4 sm:px-6 lg:px-8">
+                    <div class="sm:flex sm:items-center">
+                        <div class="sm:flex-auto">
+                            <h1 class="text-base font-semibold leading-6 text-gray-900">Recipes</h1>
+                            <p class="mt-2 text-sm text-gray-700">A list of all the recipes you created</p>
+                        </div>
+                        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                            <a href="/marmiteux/create-recipe" class="block rounded-md bg-pink-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600">Create a recipe</a>
+                        </div>
+                    </div>
+                    <div class="mt-8 flow-root">
+                        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-300">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
+                                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
+                                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Recipe</th>
+                                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Grade</th>
+                                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                                    <span class="sr-only">Edit</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-200 bg-white">
+                                            <?php if (!empty($recipes)) : ?>
+                                                <?php foreach ($recipes as $recipe) : ?>
+                                                    <tr>
+                                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"><?php echo htmlspecialchars($recipe['name']); ?></td>
+                                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><?php echo htmlspecialchars($recipe['description']); ?></td>
+                                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><?php echo htmlspecialchars($recipe['recipe']); ?></td>
+                                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Grade</td>
+                                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                            <a href="#" class="text-pink-600 hover:text-pink-900">Edit<span class="sr-only">, Lindsay Walton</span></a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php else : ?>
+                                                <p>No recipes found.</p>
+                                            <?php endif; ?>
 
-    </div>
 
-    <div class="container article-section">
-        <h1 class="header-title">My Favorite Recipes :</h1>
+                                            <!-- More people... -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+        </main>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

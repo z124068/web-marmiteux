@@ -1,18 +1,24 @@
 <?php
 
 use App\Controllers\PageController;
+use App\Controllers\RecipeController; // Ajoutez cette ligne pour importer RecipeController
 
 require_once __DIR__ . '/../app/Controllers/PageController.php';
+require_once __DIR__ . '/../app/Controllers/RecipeController.php'; // Ajoutez cette ligne pour inclure RecipeController
 
 $routes = [
-    '/' => 'index',             // Route pour la page d'accueil
-    '/login' => 'login',        // Route pour afficher le formulaire de login
-    '/login/post' => 'processLogin', // Route pour traiter le formulaire de login
-    '/register' => 'register',  // Route pour afficher le formulaire d'inscription
-    '/register/post' => 'processRegister', // Route pour traiter le formulaire d'inscription
-    '/logout' => 'logout',      // Route pour déconnexion
+    '/' => 'index',
+    '/login' => 'login',
+    '/login/post' => 'processLogin',
+    '/register' => 'register',
+    '/register/post' => 'processRegister',
+    '/logout' => 'logout',
     '/favorite' => 'favorite',
-    '/my-account' => 'myAccount',  
+    '/my-account' => 'myAccount',
+    '/create-recipe' => 'createRecipe',
+    '/edit-recipe' => 'editRecipe',
+    '/create-recipe/post' => 'processCreateRecipe',
+    '/edit-recipe/post' => 'processEditRecipe',
     // Ajoutez d'autres routes ici
 ];
 
@@ -23,11 +29,18 @@ if (strpos($requestUri, $baseUri) === 0) {
     $requestUri = substr($requestUri, strlen($baseUri));
 }
 
-$controller = new PageController();
+$controller = new PageController(); // Utilisation de PageController par défaut
 
 if (array_key_exists($requestUri, $routes)) {
     $method = $routes[$requestUri];
-    $controller->{$method}();
+    
+    // Utilisation du RecipeController pour les routes spécifiques
+    if ($method === 'createRecipe' || $method === 'editRecipe' || $method === 'processCreateRecipe' || $method === 'processEditRecipe') {
+        $recipeController = new RecipeController();
+        $recipeController->{$method}();
+    } else {
+        $controller->{$method}();
+    }
 } else {
     http_response_code(404);
     echo 'Page not found';

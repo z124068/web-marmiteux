@@ -25,6 +25,14 @@
         <h2 class="text-center mb-4">Create a new Account</h2>
         <form action="/marmiteux/register/post" method="POST">
             <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="John" required>
+            </div>
+            <div class="form-group">
+                <label for="surname">Surname</label>
+                <input type="text" class="form-control" id="surname" name="surname" placeholder="Doe" required>
+            </div>
+            <div class="form-group">
                 <label for="email_address">Email Address</label>
                 <input type="text" class="form-control" id="email_address" name="email_address" placeholder="john.doe@example.fr" required>
             </div>

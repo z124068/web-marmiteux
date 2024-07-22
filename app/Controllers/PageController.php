@@ -13,11 +13,91 @@ class PageController
     {
         session_start();
 
-        // Vérifier si l'utilisateur est connecté
+        // Vérifier si l'utilisateur est connecté et récupérer l'ID
         $userConnected = isset($_SESSION['id']);
+        if ($userConnected) {
+            // Connexion à la base de données
+            $db = new Database();
 
-        // Inclure la vue en passant l'état de connexion
+            // Préparer la requête SQL pour récupérer les informations de l'utilisateur
+            $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
+            $stmt->bind_param("i", $_SESSION['id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            // Récupérer les informations de l'utilisateur
+            $currentUser = $result->fetch_assoc();
+        }
+        // Connexion à la base de données
+        $db = new Database();
+
+        // Récupérer toutes les catégories de recettes
+        $stmt_categories = $db->prepare("SELECT id, name FROM recipe_types");
+        $stmt_categories->execute();
+        $result_categories = $stmt_categories->get_result();
+
+        // Convertir les catégories en un tableau
+        $categories = [];
+        while ($row = $result_categories->fetch_assoc()) {
+            $categories[] = $row;
+        }
+
+
+        // Préparer la requête SQL pour récupérer toutes les recettes
+        $stmt_recipes = $db->prepare("SELECT id, name, description, image_link, recipe, recipe_type_id FROM recipes");
+        $stmt_recipes->execute();
+        $result_recipes = $stmt_recipes->get_result();
+
+        // Récupérer les recettes dans un tableau
+        $recipes = [];
+        while ($row = $result_recipes->fetch_assoc()) {
+            $recipes[] = $row;
+        }
+
+        // Inclure la vue en passant les informations de l'utilisateur et les recettes
         include_once __DIR__ . '/../../resources/views/index/home.php';
+
+        // Fermeture de la connexion à la base de données
+        $stmt_recipes->close();
+        $db->close();
+    }
+
+    public function recipe($id)
+    {
+        // Vérifier si l'utilisateur est connecté et récupérer l'ID
+        session_start();
+
+        // Vérifier si l'utilisateur est connecté et récupérer l'ID
+        $userConnected = isset($_SESSION['id']);
+        if ($userConnected) {
+            // Connexion à la base de données
+            $db = new Database();
+
+            // Préparer la requête SQL pour récupérer les informations de l'utilisateur
+            $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
+            $stmt->bind_param("i", $_SESSION['id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            // Récupérer les informations de l'utilisateur
+            $currentUser = $result->fetch_assoc();
+        }
+        // Connexion à la base de données
+        $db = new Database();
+
+        // Préparer la requête SQL pour récupérer toutes les recettes
+        $stmt_recipe = $db->prepare("SELECT id, name, description, image_link, recipe FROM recipes where id = ?");
+        $stmt_recipe->bind_param("i", $id);
+        $stmt_recipe->execute();
+        $result_recipe = $stmt_recipe->get_result();
+        $recipe = $result_recipe->fetch_assoc();
+
+        // Inclure la vue en passant les informations de l'utilisateur et la recette
+        include_once __DIR__ . '/../../resources/views/index/recipe.php';
+
+        // Fermeture de la connexion à la base de données
+        $stmt_recipe->close();
+        $db->close();
     }
 
     public function login()
@@ -54,11 +134,15 @@ class PageController
                 exit;
             } else {
                 // Mot de passe incorrect
-                echo 'Invalid username or password. <a href="/marmiteux/login">Back to Login</a>';
+                $_SESSION['alert_message'] = 'Invalid username or password';
+                header('Location: /marmiteux/login');
+                exit;
             }
         } else {
             // Utilisateur non trouvé
-            echo 'Invalid username or password. <a href="/marmiteux/login">Back to Login</a>';
+            $_SESSION['alert_message'] = 'Invalid username or password';
+            header('Location: /marmiteux/login');
+            exit;
         }
 
         // Fermeture de la connexion à la base de données
@@ -104,12 +188,13 @@ class PageController
 
         // Exécuter la requête SQL
         if ($db->query($sql)) {
-            echo "You created your account successfully, you can now login.";
-            header("refresh:2;url=/marmiteux/login");
-            // Rediriger l'utilisateur vers une page de confirmation ou vers le login
-            // header('Location: /marmiteux/login'); // Rediriger vers la page de login
+            $_SESSION['alert_message'] = 'You successfully registered! You can now login !';
+            header('Location: /marmiteux/login');
+            exit;
         } else {
-            echo "Error creating user: ";
+            $_SESSION['alert_message'] = 'An error occured, please retry !';
+            header('Location: /marmiteux/register');
+            exit;
         }
 
         // Fermeture de la connexion à la base de données
@@ -161,8 +246,39 @@ class PageController
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
 
+            // get favorites in user table, it is a json with number inside. take this number, and get all recipes that got for id, these numbers
+            $stmt_user = $db->prepare("SELECT favorites FROM users WHERE id = ?");
+            $stmt_user->bind_param("i", $userId);
+            $stmt_user->execute();
+            $result_user = $stmt_user->get_result();
+
+            // Récupérer les favoris de l'utilisateur
+            $user = $result_user->fetch_assoc();
+            $favorites = json_decode($user['favorites'], true); // Convert the JSON in a PHP array
+
+            // Vérifiez si $favorites est un tableau et non vide
+            if (is_array($favorites) && !empty($favorites)) {
+                // Préparer la requête SQL pour récupérer les recettes favorites
+                $ids_string = implode(',', $favorites);
+                $stmt_favorites = $db->prepare("SELECT id, name, description, image_link, recipe FROM recipes WHERE id IN ($ids_string)");
+
+                $stmt_favorites->execute();
+                $result_favorites = $stmt_favorites->get_result();
+
+                // Récupérer les recettes dans un tableau
+                $favorites = [];
+                while ($row = $result_favorites->fetch_assoc()) {
+                    $favorites[] = $row;
+                }
+
+                $stmt_favorites->close();
+            } else {
+                // Si $favorites n'est pas un tableau ou est vide, initialiser comme un tableau vide
+                $favorites = [];
+            }
+
             // Préparer la requête SQL pour récupérer les recettes de l'utilisateur
-            $stmt_recipes = $db->prepare("SELECT id, name, description , recipe FROM recipes WHERE user_id = ?");
+            $stmt_recipes = $db->prepare("SELECT id, name, description, recipe FROM recipes WHERE user_id = ?");
             $stmt_recipes->bind_param("i", $userId);
             $stmt_recipes->execute();
             $result_recipes = $stmt_recipes->get_result();

@@ -1,5 +1,10 @@
 <!-- login/login.php -->
+<?php
+// login/login.php
 
+session_start(); // Démarrer la session
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,6 +13,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marmiteux - Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/marmiteux/public/img/logo.ico">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,6 +29,15 @@
 </head>
 
 <body>
+
+    <?php if (isset($_SESSION['alert_message'])) : ?>
+        <?php
+        $alertMessage = $_SESSION['alert_message'];
+        include 'resources/views/components/alertMessage.php';
+        unset($_SESSION['alert_message']);
+        ?>
+    <?php endif; ?>
+
     <div class="container">
         <h2 class="text-center mb-4">Login to your Account</h2>
         <form action="/marmiteux/login/post" method="POST">
@@ -39,6 +56,7 @@
             <a href="/marmiteux" class="btn btn-secondary">Home</a>
         </form>
     </div>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

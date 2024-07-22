@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marmiteux</title>
     <link href="<?php echo '/marmiteux/public/styles.css'; ?>" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/marmiteux/public/img/logo.ico">
 
 </head>
 
-<body>
+<body class="bg-gray-100">
 
     <div>
         <?php include 'resources/views/components/sidebar.php'; ?>

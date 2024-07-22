@@ -2,12 +2,15 @@
 
 use App\Controllers\PageController;
 use App\Controllers\RecipeController;
+use App\Controllers\FavoriteController;
 
 require_once __DIR__ . '/../app/Controllers/PageController.php';
 require_once __DIR__ . '/../app/Controllers/RecipeController.php';
+require_once __DIR__ . '/../app/Controllers/FavoriteController.php';
 
 $routes = [
     '/' => 'index',
+    '/recipe/{id}' => 'recipe',
 
     // Authentication routes
     '/login' => 'login',
@@ -25,6 +28,11 @@ $routes = [
     '/my-account/recipes/create-recipe/post' => 'processCreateRecipe',
     '/my-account/recipes/edit-recipe/post' => 'processEditRecipe',
     '/my-account/recipes/{id}/delete-recipe/post' => 'processDeleteRecipe',
+
+    '/my-account/favorites' => 'favorites',
+    '/favorites/add' => 'addFavorite',
+    '/favorites/remove' => 'removeFavorite',
+
 
     // Ajoutez d'autres routes ici
 ];
@@ -48,6 +56,9 @@ foreach ($routes as $route => $method) {
         if ($method === 'createRecipe' || $method === 'editRecipe' || $method === 'processCreateRecipe' || $method === 'processEditRecipe' || $method === 'recipes' || $method === 'processDeleteRecipe') {
             $recipeController = new RecipeController();
             $recipeController->{$method}(...$matches);
+        } elseif ($method === 'favorites' || $method === 'addFavorite' || $method === 'removeFavorite') {
+            $favoriteController = new FavoriteController();
+            $favoriteController->{$method}(...$matches);
         } else {
             $controller->{$method}(...$matches);
         }

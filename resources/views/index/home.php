@@ -1,121 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+$title = "Marmiteux - Home"; // Définir le titre de la page
+$baseUri = "/marmiteux";
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marmiteux</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+$headScripts = '<link rel="stylesheet" href="' . $baseUri . '/resources/css/index.css">';
+$footerScripts = '<script src="' . $baseUri . '/resources/js/index.js"></script>';
 
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .header-title {
-            font-size: 2.5rem;
-            color: #e63946;
-            text-align: center;
-            margin-top: 100px;
-        }
-
-        .header-subtitle {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #6c757d;
-        }
-
-        .header-section {
-            background-color: #f8f9fa;
-            padding: 50px 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .header-section img {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 10%;
-            width: 100px;
-        }
-
-        .article-section {
-            margin-top: 30px;
-        }
-
-        .article img {
-            width: 100%;
-            height: auto;
-        }
-
-        .article {
-            padding: 10px;
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">
-            <img src="/mnt/data/image.png" alt="logo" style="width: 40px;">
-        </a>
-        <div class="collapse navbar-collapse justify-content-end">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Favorite</a>
-                </li>
-                <?php if ($userConnected) : ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/marmiteux/my-account">My Account</a>
-                    </li>
-                <?php else : ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/marmiteux/login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-danger text-white" href="/marmiteux/register">Register</a>
-                    </li>
-                <?php endif; ?>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="header-section">
-        <div class="container">
-            <h1 class="header-title">Marmiteux</h1>
-            <p class="header-subtitle">Where Every Recipe Tells a Story.</p>
+ob_start();
+?>
+<!-- Contenu spécifique de la page -->
+<div class="flex flex-col items-center">
+    <div class="bg-gray-50 py-32 w-full flex flex-col items-center">
+        <div class="container w-full">
+            <h1 class="text-4xl font-bold text-center text-gray-900 mb-8">Marmiteux</h1>
+            <p class="text-center text-gray-600">Where Every Recipe Tells a Story.</p>
         </div>
     </div>
 
-    <div class="container article-section">
-        <div class="row">
-            <div class="col-md-6 article">
-                <img src="https://via.placeholder.com/500" alt="Article Image 1">
-            </div>
-            <div class="col-md-6 article">
-                <img src="https://via.placeholder.com/500" alt="Article Image 2">
-            </div>
-            <div class="col-md-6 article">
-                <img src="https://via.placeholder.com/500" alt="Article Image 3">
-            </div>
-            <div class="col-md-6 article">
-                <img src="https://via.placeholder.com/500" alt="Article Image 4">
+    <div class="container mt-16">
+        <div class="flex items-center justify-end mb-8">
+            <div class="relative">
+                <select id="categorySelect" name="category" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">All Categories</option>
+                    <?php foreach ($categories as $category) : ?>
+                        <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                </div>
             </div>
         </div>
+
+        <?php
+        // Définir si l'utilisateur est connecté
+        $isUserConnected = isset($currentUser);
+
+        // Passer cette information à JavaScript
+        echo "<script>var userConnected = " . ($isUserConnected ? 'true' : 'false') . ";</script>";
+        ?>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <?php
+            // Vérifiez si l'utilisateur est connecté et si ses favoris ne sont pas nuls, sinon définissez un tableau vide
+            $userFavorites = $isUserConnected && !is_null($currentUser['favorites']) ? json_decode($currentUser['favorites'], true) : [];
+
+            foreach ($recipes as $recipe) :
+                $isFavorite = $isUserConnected ? in_array($recipe['id'], $userFavorites) : false;
+            ?>
+                <div class="relative bg-white rounded-lg shadow-md p-8 recipe" data-recipe-id="<?php echo $recipe['id']; ?>" data-category-id="<?php echo $recipe['recipe_type_id']; ?>">
+                    <div class="absolute top-0 favorite" style="right: -2rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" data-is-favorite="<?php echo $isFavorite ? 'true' : 'false'; ?>" fill="<?php echo $isFavorite ? '#db2777' : 'none'; ?>" class="w-8 h-8 absolute top-1/2 right-1/2 transform -translate-y-1/2 -translate-x-1/2" style="color: #db2777;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                        </svg>
+                    </div>
+                    <div class="w-full h-96">
+                        <img src="<?php echo ($recipe['image_link']); ?>" alt="Article Image" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex items-start mt-8">
+                        <div class="w-3/4">
+                            <h2 class="text-2xl font-bold mb-4"><?php echo htmlspecialchars($recipe['name']); ?></h2>
+                            <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($recipe['description']); ?></p>
+                            <a href="/marmiteux/recipe/<?php echo $recipe['id']; ?>" class="text-white bg-pink-600 hover:bg-pink-700 font-bold py-2 px-4 rounded">See the recipe ...</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <?php if (isset($_SESSION['alert_message'])) : ?>
+            <div class="alert-message">
+                <?php echo $_SESSION['alert_message']; ?>
+            </div>
+            <?php unset($_SESSION['alert_message']); ?>
+        <?php endif; ?>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-
-</html>
+<?php
+$content = ob_get_clean();
+include __DIR__ . '/../components/layout.php';
+?>

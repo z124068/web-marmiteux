@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marmiteux</title>
     <link href="<?php echo '/marmiteux/public/styles.css'; ?>" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/marmiteux/public/img/logo.ico">
 
 </head>
 
-<body>
+<body class="bg-gray-100">
 
     <div>
         <?php include 'resources/views/components/sidebar.php'; ?>
-        <main class="py-10 lg:pl-72">
+        <main class="py-10 lg:pl-72 ">
             <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
                 <div class="py-4">
 
@@ -66,7 +67,7 @@
                                                                 </label>
                                                                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                                                                     <div class="mt-1 sm:mt-0 sm:col-span-2">
-                                                                        <input type="text" name="description" id="description"  required class="pl-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-pink-300 placeholder:text-gray-400 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6" placeholder="A delicious chocolate cake">
+                                                                        <input type="text" name="description" id="description" required class="pl-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-pink-300 placeholder:text-gray-400 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6" placeholder="A delicious chocolate cake">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -92,7 +93,7 @@
                                                                 </label>
                                                                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                                                                     <select id="recipe_type_id" name="recipe_type_id" class="mt-2 pt-2 pb-2 block w-1/4 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-pink-300 focus:ring-2 focus:ring-pink-600 sm:text-sm sm:leading-6">
-                                                                    <option value="" class="text-gray-400">Please Choose a Recipe Type</option>
+                                                                        <option value="" class="text-gray-400">Please Choose a Recipe Type</option>
                                                                         <?php foreach ($recipe_types as $recipe_type) { ?>
                                                                             <option value="<?php echo $recipe_type['id']; ?>"><?php echo $recipe_type['name']; ?></option>
                                                                         <?php } ?>
@@ -101,7 +102,39 @@
                                                             </div>
                                                         </div>
 
+                                                        <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+                                                            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                                                <label for="image_link" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                                                                    Image URL
+                                                                </label>
+                                                                <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                                                    <div class="sm:grid sm:grid-cols-1 sm:gap-4 sm:items-start">
+                                                                        <input type="url" name="image_link" id="image_link" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-pink-300 focus:ring-2 focus:ring-pink-600 sm:text-sm sm:leading-6" placeholder="https://example.com/image.jpg">
+                                                                        <img src="" id="image-preview" class="mt-1 sm:mt-0 sm:col-span-1 object-cover h-48 w-96 rounded-lg shadow-lg" style="display:none;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <script>
+                                                                const imageUrlInput = document.querySelector('#image_link');
+                                                                const imagePreview = document.querySelector('#image-preview');
 
+                                                                imageUrlInput.addEventListener('input', event => {
+                                                                    if (event.target.value) {
+                                                                        imagePreview.style.display = 'block';
+                                                                        imagePreview.src = event.target.value;
+                                                                    } else {
+                                                                        imagePreview.style.display = 'none';
+                                                                    }
+                                                                });
+                                                            </script>
+                                                            <style>
+                                                                #image-preview {
+                                                                    object-fit: cover;
+                                                                    height: 300px;
+                                                                    width: 600px;
+                                                                }
+                                                            </style>
+                                                        </div>
 
                                                         <div class="mt-8 border-t border-gray-200 pt-5">
                                                             <div class="pt-5">

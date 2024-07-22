@@ -153,6 +153,7 @@ class RecipeController
         $description = $_POST['description'];
         $recipe = $_POST['recipe'];
         $recipeTypeId = $_POST['recipe_type_id'];
+        $imageLink = $_POST['image_link'];
 
         // Récupération de l'ID de l'utilisateur depuis la session
         $userId = $_SESSION['id'];
@@ -161,18 +162,16 @@ class RecipeController
         $db = new Database();
 
         // Préparation de la requête SQL sécurisée pour éviter les injections SQL
-        $stmt = $db->prepare("INSERT INTO recipes (name, description, recipe, recipe_type_id, user_id) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssi", $name, $description, $recipe, $recipeTypeId, $userId); // Notez le "i" pour le paramètre $userId (entier)
+        $stmt = $db->prepare("INSERT INTO recipes (name, description, recipe, recipe_type_id, user_id, image_link) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssiss", $name, $description, $recipe, $recipeTypeId, $userId, $imageLink); // Correction du "i" pour le paramètre $userId (entier)
 
         if ($stmt->execute()) {
             // Insertion réussie
             $_SESSION['alert_message'] = "Your recipe has been successfully created!";
-
             header('Location: /marmiteux/my-account/recipes'); // Redirection vers la page de mon compte après création de recette
             exit;
         } else {
             $_SESSION['alert_message'] = "An error occurred. Please try again.";
-
             // Erreur lors de l'insertion
             echo 'Error: ' . $stmt->error;
         }
@@ -181,6 +180,7 @@ class RecipeController
         $stmt->close();
         $db->close();
     }
+
 
     public function processEditRecipe()
     {

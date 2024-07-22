@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS recipes (
     favorite_nb INT DEFAULT 0,
     grade FLOAT DEFAULT 0,
     grade_nb INT DEFAULT 0,
+    image_link VARCHAR(255),
     status VARCHAR(50),
     recipe_type_id INT,
     user_id INT,

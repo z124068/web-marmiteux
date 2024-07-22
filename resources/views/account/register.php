@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marmiteux - Register</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/marmiteux/public/img/logo.ico">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,6 +24,14 @@
 </head>
 
 <body>
+    <?php if (isset($_SESSION['alert_message'])) : ?>
+        <?php
+        $alertMessage = $_SESSION['alert_message'];
+        include 'resources/views/components/alertMessage.php';
+        unset($_SESSION['alert_message']);
+        ?>
+    <?php endif; ?>
+
     <div class="container">
         <h2 class="text-center mb-4">Create a new Account</h2>
         <form action="/marmiteux/register/post" method="POST">

@@ -1,30 +1,36 @@
 <?php
-$title = "Marmiteux - Recipe"; // Définir le titre de la page
+$title = "Marmiteux - Recipe";
 $baseUri = "/marmiteux";
 $headScripts = '<link rel="stylesheet" href="' . $baseUri . '/resources/css/index.css">';
 $footerScripts = '<script src="' . $baseUri . '/resources/js/index.js"></script>';
 
 ob_start();
 ?>
-<!-- Contenu spécifique de la page -->
 <div class="flex flex-col items-center">
-    <div class="bg-gray-50 py-32 w-full flex flex-col items-center">
-        <div class="container w-full">
-            <h1 class="text-4xl font-bold text-center text-gray-900 mb-8">Marmiteux</h1>
-            <p class="text-center text-gray-600">Where Every Recipe Tells a Story.</p>
+    <div class="flex items-center justify-center bg-gray-50 pb-32 w-full">
+        <div class="relative isolate -z-10 mt-32 sm:mt-40">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="mx-auto flex max-w-2xl flex-col bg-white/5 px-6 sm:rounded-3xl sm:p-8 lg:mx-0 lg:max-w-none lg:flex-row-reverse lg:items-center xl:gap-x-20 xl:px-20">
+                    <img class="h-36 w-36 flex-none object-cover  lg:h-auto lg:max-w-sm" src="/marmiteux/public/img/logo-png.png" alt="">
+                    <div class="w-full flex-auto">
+                        <h2 class="text-3xl font-bold tracking-tight text-red-300 sm:text-5xl">Marmiteux</h2>
+                        <p class="mt-6 text-lg leading-8 text-gray-500">Where Every Recipe Tells a Story.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <?php
-    // Définir si l'utilisateur est connecté
+    // Define if the user is connected
     $isUserConnected = isset($currentUser);
 
-    // Passer cette information à JavaScript
+    // Pass this information to JavaScript
     echo "<script>var userConnected = " . ($isUserConnected ? 'true' : 'false') . ";</script>";
     ?>
 
     <div class="container mt-16">
         <?php
-        // Vérifiez si l'utilisateur est connecté et si ses favoris ne sont pas nuls, sinon définissez un tableau vide
+        // Verify if the user is connected and if his favorites are not empty, otherwise set an empty array
         $userFavorites = $isUserConnected && !is_null($currentUser['favorites']) ? json_decode($currentUser['favorites'], true) : [];
 
         $isFavorite = $isUserConnected ? in_array($recipe['id'], $userFavorites) : false;
@@ -42,7 +48,26 @@ ob_start();
                 <div class="w-3/4">
                     <h2 class="text-2xl font-bold mb-4"><?php echo htmlspecialchars($recipe['name']); ?></h2>
                     <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($recipe['description']); ?></p>
-                    <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($recipe['recipe']); ?></p>
+                    <p class="text-gray-600 mb-4">
+                        <?php
+                        // Get the recipe text
+                        $recipeText = htmlspecialchars($recipe['recipe']);
+
+                        // Convert the newlines to <br>
+                        $formattedRecipe = nl2br($recipeText);
+
+                        // Add a <br> before each "STEP" and format "STEP" in bold and underlined
+                        $formattedRecipe = preg_replace('/(Step \d+)/', '<br><strong><u>$1</u></strong>', $formattedRecipe);
+
+                        // If the text starts with "STEP", remove the first <br> added
+                        // Display the formatted text
+                        echo $formattedRecipe;
+                        ?>
+
+
+                    </p>
+
+
                 </div>
             </div>
         </div>

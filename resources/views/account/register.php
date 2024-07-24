@@ -1,5 +1,3 @@
-<!-- resources/views/login/register.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,16 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/marmiteux/public/img/logo.ico">
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            max-width: 400px;
-            margin-top: 100px;
-        }
-    </style>
 </head>
 
 <body>
@@ -32,39 +20,71 @@
         ?>
     <?php endif; ?>
 
-    <div class="container">
-        <h2 class="text-center mb-4">Create a new Account</h2>
-        <form action="/marmiteux/register/post" method="POST">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="John" required>
-            </div>
-            <div class="form-group">
-                <label for="surname">Surname</label>
-                <input type="text" class="form-control" id="surname" name="surname" placeholder="Doe" required>
-            </div>
-            <div class="form-group">
-                <label for="email_address">Email Address</label>
-                <input type="text" class="form-control" id="email_address" name="email_address" placeholder="john.doe@example.fr" required>
-            </div>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="JohnDoe06" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" name="description" placeholder="I Love to cook good recipes" required>
-            </div>
-            <div class="form-group">
-                <label for="description">Already have an account ? <a href="/marmiteux/login">Login here</a></label>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-            <a href="/marmiteux" class="btn btn-secondary">Home</a>
-        </form>
+    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <a href="/marmiteux">
+                <img class="mx-auto h-24 w-auto" src="/marmiteux/public/img/logo-png.png" alt="Marmiteux">
+            </a>
+            <h2 class="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Register for an new account</h2>
+        </div>
+
+        <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
+            <form class="space-y-6" action="/marmiteux/register/post" method="POST">
+                <div>
+                    <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                    <div class="mt-2">
+                        <input style="border:1px solid #d1d5db!important; padding-left: 0.5rem;" id="name" id="name" name="name" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="surname" class="block text-sm font-medium leading-6 text-gray-900">Surname</label>
+                    <div class="mt-2">
+                        <input style="border:1px solid #d1d5db!important; padding-left: 0.5rem;" id="surname" id="surname" name="surname" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email Address</label>
+                    <div class="mt-2">
+                        <input style="border:1px solid #d1d5db!important; padding-left: 0.5rem;" id="email_address" id="email_address" name="email_address" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+                    <div class="mt-2">
+                        <input style="border:1px solid #d1d5db!important; padding-left: 0.5rem;" id="username" id="username" name="username" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                    <div class="mt-2">
+                        <input style="border:1px solid #d1d5db!important; padding-left: 0.5rem;" id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                    <div class="mt-2">
+                        <input style="border:1px solid #d1d5db!important; padding-left: 0.5rem;" id="description" id="description" name="description" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-pink-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" class="flex w-full justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600">Register</button>
+                </div>
+                <div>
+                    <a href="/marmiteux/" class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 hover:no-underline">Home</a>
+                </div>
+            </form>
+
+            <p class="mt-10 text-center text-sm text-gray-500">
+                You already have an account ?
+                <a href="/marmiteux/login" class="font-semibold leading-6 text-pink-600 hover:text-pink-500">Login here</a>
+            </p>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

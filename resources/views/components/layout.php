@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
     <link href="/resources/css/index.css" rel="stylesheet">
 
-    <?php if (isset($headScripts)) echo $headScripts; ?> <!-- Styles ou scripts additionnels -->
+    <?php if (isset($headScripts)) echo $headScripts; ?> 
 </head>
 
 <body class="bg-gray-100">
@@ -21,7 +21,7 @@
 
     <?php include 'resources/views/components/footer.php'; ?>
     <script src="/resources/js/index.js"></script>
-    <?php if (isset($footerScripts)) echo $footerScripts; ?> <!-- Scripts additionnels -->
+    <?php if (isset($footerScripts)) echo $footerScripts; ?> 
 </body>
 
 </html>

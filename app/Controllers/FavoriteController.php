@@ -16,63 +16,62 @@ class FavoriteController
     {
         session_start();
 
-        // Vérifier si l'utilisateur est connecté et récupérer l'ID
+        // Verify if the user is connected and get his ID
         if (!isset($_SESSION['id'])) {
-            // Redirection vers la page de login si l'utilisateur n'est pas connecté
+            // Redirect to the login page if the user is not connected
             header('Location: /marmiteux/login');
             exit;
         }
 
         $userConnected = isset($_SESSION['id']);
         if ($userConnected) {
-            // Connexion à la base de données
+            // Connect to the database
             $db = new Database();
 
-            // Préparer la requête SQL pour récupérer les informations de l'utilisateur
+            // Prepare the SQL query to get the user information
             $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->bind_param("i", $_SESSION['id']);
             $stmt->execute();
             $result = $stmt->get_result();
 
-            // Récupérer les informations de l'utilisateur
+            // Get the user informations
             $currentUser = $result->fetch_assoc();
         }
 
-        // Récupérer l'ID de l'utilisateur depuis la session
+        // Get the user ID from the session
         $userId = $_SESSION['id'];
 
 
         $db = new Database();
 
-        // get favorites in user table, it is a json with number inside. take this number, and get all recipes that got for id, these numbers
-        // Préparer la requête SQL pour sélectionner les favoris de l'utilisateur
+        // Prepare the SQL query to select the favorites of the user
         $stmt_user = $db->prepare("SELECT favorites FROM users WHERE id = ?");
         $stmt_user->bind_param("i", $userId);
         $stmt_user->execute();
         $result_user = $stmt_user->get_result();
 
-        // Récupérer les favoris de l'utilisateur
+        // Get favorites of the user
         $user = $result_user->fetch_assoc();
         $favorites = json_decode($user['favorites'], true); // Convert the JSON in a PHP array
 
 
-        // Préparer la requête SQL pour récupérer toutes les recettes
+        // Prepare the SQL query to select all the recipes
         $ids_string = implode(',', $favorites);
         $stmt_recipes = $db->prepare("SELECT id, name, description, image_link, recipe FROM recipes where id IN ($ids_string)");
 
         $stmt_recipes->execute();
         $result_recipes = $stmt_recipes->get_result();
 
-        // Récupérer les recettes dans un tableau
+        // Get the recipes in an array
         $recipes = [];
         while ($row = $result_recipes->fetch_assoc()) {
             $recipes[] = $row;
         }
 
-        // Inclure la vue en passant les informations de l'utilisateur et les recettes
+        // Include the view passing the user information and recipes
         include_once __DIR__ . '/../../resources/views/favorites/favorites.php';
 
-        // Fermeture de la connexion à la base de données
+        // Close the database connection
         $stmt_recipes->close();
         $db->close();
     }
@@ -89,7 +88,7 @@ class FavoriteController
         $recipeId = $_POST['recipeId'];
         $userId = $_SESSION['id'];
 
-        // Récupérer les favoris actuels de l'utilisateur
+        // Get the favorites of the user
         $user = $this->getUserById($userId);
         if ($user === null) {
             echo json_encode(['status' => 'error', 'message' => 'User not found']);
@@ -99,7 +98,7 @@ class FavoriteController
         $favorites = json_decode($user['favorites'], true);
 
         if (!is_array($favorites)) {
-            $favorites = []; // Initialiser à un tableau vide si null ou non un tableau
+            $favorites = []; // Initialise the array to an empty array if null or not an array
         }
 
         if (!in_array($recipeId, $favorites)) {
@@ -122,7 +121,7 @@ class FavoriteController
         $recipeId = $_POST['recipeId'];
         $userId = $_SESSION['id'];
 
-        // Récupérer les favoris actuels de l'utilisateur
+        // Get the favorites of the user
         $user = $this->getUserById($userId);
         if ($user === null) {
             echo json_encode(['status' => 'error', 'message' => 'User not found']);
@@ -132,7 +131,7 @@ class FavoriteController
         $favorites = json_decode($user['favorites'], true);
 
         if (!is_array($favorites)) {
-            $favorites = []; // Initialiser à un tableau vide si null ou non un tableau
+            $favorites = [];// Initialise the array to an empty array if null or not an array
         }
 
         if (($key = array_search($recipeId, $favorites)) !== false) {
@@ -146,19 +145,19 @@ class FavoriteController
 
     private function getUserById($userId)
     {
-        // Connexion à la base de données
+        // Connect to the database
         $db = new Database();
 
-        // Préparer la requête SQL pour récupérer les informations de l'utilisateur
+        // Prepare the SQL query to select the user information
         $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        // Récupérer les informations de l'utilisateur
+        // Get the user informations
         $user = $result->fetch_assoc();
 
-        // Fermeture de la connexion à la base de données
+        // Close the database connection
         $stmt->close();
         $db->close();
 
